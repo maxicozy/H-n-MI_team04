@@ -73,10 +73,56 @@ Then we connected the Arduino to Processing to use the value we get from the pre
 
 ## second day
 
-On the second day, we started to experiment with p5.js.
+On the second day, we started to experiment with p5.js. To get used to working with changing variables that we will be implementing in the following days from the arduino, we used the Microphone input of our computer for simulation purposes.
+
+![Assembled Pressure Sensor](images/p5js-01.gif)
+![Assembled Pressure Sensor](images/p5js-02.gif)
+![Assembled Pressure Sensor](images/p5js-03.gif)
+
+```
+var mic;
+var time=0;
+var lin = 50;
+
+function setup() {
+  createCanvas(400, 400);
+  mic = new p5.AudioIn();
+  mic.start();
+  background(0);
+}
+
+function draw() {
+  var vol = mic.getLevel();
+  var circlesize = map(vol, 0, 1, 5*10, 200*10);
+  ellipse(time, lin, circlesize, circlesize);
+  time = time+5;
+  fill(0);
+  stroke(255)
+  
+  if(time == 400){
+    lin = lin + 50;
+    time = 0;
+  }
+}
+```
+
+***
+
+Also on the second day we also started thinking about different project ideas for this course:
+
+### utilizing the pressure sensor
+1. We thought about placing the pressure sensor below our feet to collect data about our the steps we take each day and also the time between the steps, so we could display a graph representing the _intensity_ or the _velocity_ of our lives.
+2. Another idea was to place the pressure sensor on our butts to collect data on how much time of a day we spend sitting down.
+
+### stalking a slime mold
+
+The pressure sensor ideas were nice but also seemed a bit to straight forward for us so we decided to try to go for something a bit more extravagant: We want to record a video of a growing _physarum polycephalum_ slime mold and then use some sort of computer vision to classify different growth patterns and display the information we collected about that in p5.
 
 
+## third day
 
+On the third day we connected inputs from our DIY pressure sensor to p5.js
+ 
 
 
 ## references
