@@ -1,13 +1,15 @@
 # H-n-MI_team04
 
 In the course H(n)MI (short for Human (non-Human) Machine Interaction), we learned about how to collect data about the body with an Arduino and then how to process and visualize this data using processing or p5.js.
-***
 
 ## first day
 
 To get ourselves into the right mood, we started by assembling a pressure sensor from a piece of velostat, 2 pieces of conductive tape and 2 pieces of fabric.
 
 ![Assembled Pressure Sensor](images/pressure-sensor-layers.gif)
+
+To make our pressure sensor work, we need to connect it into a circuit together with another resistor. We used a 1K resistor between 3.3V and Ground, then we connected an Analog Pin from our Arduino between the two resistors to measure the changing volatage between the static and the variable velostat resistor.
+
 ![Pressure Sensor Circuit](images/IMG_1139.jpeg)
 
 We used a simple AnalogRead with the Arduino:
@@ -31,8 +33,8 @@ void loop() {
 
 Then we connected the Arduino to Processing to use the value we get from the pressure sensor to affect a graphic display:
 
-|:--------:|
-|![Assembled Pressure Sensor](images/pressure-sensor-processing.gif)|
+
+![Assembled Pressure Sensor](images/pressure-sensor-processing.gif)
 
 
 
@@ -68,14 +70,15 @@ Then we connected the Arduino to Processing to use the value we get from the pre
   }
 ```
 
-***
+
 ## second day
 
 On the second day, we started to experiment with p5.js.
 
 
 
-***
+
+
 ## references
 
 Many code snippets and detailed instructions can be found in our teachers' repository:
