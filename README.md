@@ -125,6 +125,87 @@ On the third day we connected inputs from our DIY pressure sensor to p5.js with 
 
 ![pressure sensor with p5](images/pressure-sensor-p5.gif)
 
+```/*
+Example for H(n)MI Workshop
+MDEF IAAC class 2025.
+With this example, we are going to learn how receive
+ data from our sensors using the Web Serial library for serial communication.
+Documentation: https://github.com/gohai/p5.webserial
+ For this exercise you will need to have already working your soft sensor connected to a microcontroller.
+
+ */
+
+//Serial communication variables
+let port;
+let lecture = 0;
+let val = 0;
+let connectBtn;
+let diameter;
+let myColor;
+let colorB;
+
+// My Variables
+
+function setup() {
+  createCanvas(400, 400);
+  port = createSerial();
+  connectBtn = createButton("Connect Serial");
+  connectBtn.position(290, 370);
+  connectBtn.mousePressed(connectBtnClick);
+  colorB=color("#ff00ff");
+    }
+
+function draw() {
+  readingSerial();
+  serialConnected();
+  
+  background(colorB);
+  
+  if(val>=400){
+  colorB=("#98fb98")
+  }else if(val>=101 && val<=200){
+    colorB=color("#ff00ff");
+}
+  
+  myColor=map(val, 0, 650, 0, 255);
+  diameter=map(val, 0, 650, 0, 255);
+  
+  fill(0, 0, myColor);
+  circle(width/2, height/2, diameter);
+  
+}
+
+/* These functions are related to the webSerial library
+and are responsible for stabishing connection with your USB ports and the browser. We recommend not to modify them.*/
+
+function serialConnected() {
+  if (!port.opened()) {
+    connectBtn.html("Connect Serial");
+  } else {
+    connectBtn.hide();
+  }
+}
+
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open(9600);
+  } else {
+    port.close();
+  }
+}
+
+function readingSerial() {
+  if (port.available() > 0) {
+    lecture = port.readUntil("\n");
+    if (lecture) {
+      lecture = int(lecture);
+      console.log(val);
+      val = lecture;
+    }
+  }
+}
+```
+
 We then kept experimenting a bit with different colors and threshholds for the pressure values:
 
 ![p5-animation-04](images/p5-animation-04.gif)
