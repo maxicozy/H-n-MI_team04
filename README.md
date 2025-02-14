@@ -1,7 +1,5 @@
 # H-n-MI_team04
 Group: Paula Rydel, Maximilian Becht
-***
-
 
 In the course H(n)MI (short for Human (non-Human) Machine Interaction), we learned about how to collect data about the body with an Arduino and then how to process and visualize this data using processing or p5.js.
 
