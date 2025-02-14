@@ -65,8 +65,11 @@ void draw(){
 }
 ```
 </div>
+  <div style="flex: 2; padding-right:42px;">
+
 
 ![Assembled Pressure Sensor](images/pressure-sensor-processing.gif)
+</div>
 </div>
 
 ***
