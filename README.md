@@ -75,9 +75,9 @@ Then we connected the Arduino to Processing to use the value we get from the pre
 
 On the second day, we started to experiment with p5.js. To get used to working with changing variables that we will be implementing in the following days from the arduino, we used the Microphone input of our computer for simulation purposes.
 
-![Assembled Pressure Sensor](images/p5js-01.gif)
-![Assembled Pressure Sensor](images/p5js-02.gif)
-![Assembled Pressure Sensor](images/p5js-03.gif)
+![p5-animation](images/p5js-01.gif)
+![p5-animation](images/p5js-02.gif)
+![p5-animation](images/p5js-03.gif)
 
 ```
 var mic;
@@ -121,7 +121,24 @@ The pressure sensor ideas were nice but also seemed a bit to straight forward fo
 
 ## third day
 
-On the third day we connected inputs from our DIY pressure sensor to p5.js
+On the third day we connected inputs from our DIY pressure sensor to p5.js with the Web Serial library.
+
+![pressure sensor with p5](images/pressure-sensor-p5.gif)
+
+We then kept experimenting a bit with different colors and threshholds for the pressure values:
+
+![p5-animation-04](images/p5-animation-04.gif)
+![p5-animation-05](images/p5-animation-05.gif)
+
+Since we are currently not planning to actually use the pressure sensor for our project, we started thinking about different ways to realize our slime mold observation:
+
+1. One way we want to explore is to take pictures of different grwoth patterns of the slime mold, classify them and use them to train an image recognition machine learning model. Then we could use a webcam that observes a growing slime mold and then visualize the different growth stages or patterns in p5.
+
+2. The other way would be to count the amount of yellow pixels in certain specified areas of the camera resolution, which would give us very concrete data we could use for visualization. 
+
+
+
+
  
 
 
