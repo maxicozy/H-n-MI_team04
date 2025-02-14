@@ -30,52 +30,50 @@ void loop() {
 
 Then we connected the Arduino to Processing to use the value we get from the pressure sensor to affect a graphic display:
 
-
-<div style="display: flex; align-items: flex-start;">
-  <div style="flex: 1; padding-right:42px;">
-
-```
-import processing.serial.*;
-Serial mySerial;
-
-String myString;
-int nl=10;
-float myVal;
-
-void setup()
-{
-  size(800, 600);
-  printArray(Serial.list());
-  delay(5000);
-  String myPort = Serial.list()[8];
-  mySerial = new Serial(this, myPort, 9600);
-}
-void draw(){
-  while (mySerial.available() >0) {
-    myString=mySerial.readStringUntil(nl);
-    background(255, 0, 255);
-    if (myString !=null) {
-      
-      myVal=float(myString);
-      println(myVal);
-      circle(width/2, height/2, myVal);
-      smooth();
-    }
-  }
-}
-```
-</div>
-  <div style="flex: 2; padding-right:42px;">
-
+<div style="text-align: center;"> 
 
 ![Assembled Pressure Sensor](images/pressure-sensor-processing.gif)
-</div>
-</div>
+
+ </div>
+
+
+
+```
+  import processing.serial.*;
+  Serial mySerial;
+
+  String myString;
+  int nl=10;
+  float myVal;
+
+  void setup()
+  {
+    size(800, 600);
+    printArray(Serial.list());
+    delay(5000);
+    String myPort = Serial.list()[8];
+    mySerial = new Serial(this, myPort, 9600);
+  }
+  void draw(){
+    while (mySerial.available() >0) {
+      myString=mySerial.readStringUntil(nl);
+      background(255, 0, 255);
+      if (myString !=null) {
+
+  myVal=float(myString);
+        println(myVal);
+        circle(width/2, height/2, myVal);
+        smooth();
+      }
+    }
+  }
+```
 
 ***
 ## second day
 
 On the second day, we started to experiment with p5.js.
+
 
 
 ***
