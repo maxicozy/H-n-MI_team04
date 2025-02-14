@@ -8,6 +8,7 @@ In the course H(n)MI (short for Human (non-Human) Machine Interaction), we learn
 To get ourselves into the right mood, we started by assembling a pressure sensor from a piece of velostat, 2 pieces of conductive tape and 2 pieces of fabric.
 
 ![Assembled Pressure Sensor](images/pressure-sensor-layers.gif)
+![Pressure Sensor Circuit](images/IMG_1139.jpeg)
 
 We used a simple AnalogRead with the Arduino:
 
@@ -30,11 +31,9 @@ void loop() {
 
 Then we connected the Arduino to Processing to use the value we get from the pressure sensor to affect a graphic display:
 
-<div style="text-align: center;"> 
+|:--------:|
+|![Assembled Pressure Sensor](images/pressure-sensor-processing.gif)|
 
-![Assembled Pressure Sensor](images/pressure-sensor-processing.gif)
-
- </div>
 
 
 
