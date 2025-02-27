@@ -1,7 +1,10 @@
 let video;
 let yellowPixelCount = 0;
-const gridSize = 8; // 4x4 grid 
-let sectionCounts = new Array(gridSize * gridSize).fill(0);
+const videoGridSize = 8; // Grid size when video is visible
+const hiddenGridSize = 64; // Grid size when video is hidden
+let gridSize = videoGridSize; // Current active grid size
+let sectionCounts = new Array(videoGridSize * videoGridSize).fill(0);
+let hiddenSectionCounts = new Array(hiddenGridSize * hiddenGridSize).fill(0);
 let oscillators = []; // Array to store oscillators for each section
 let maxPixelCount = 6000; // Cap for normalizing volumes (adjust based on your video)
 let audioEnabled = false; // Track audio state
@@ -19,8 +22,10 @@ function setup() {
   video.size(642, 650);
   video.hide(); // Hide the actual HTML video element
   video.elt.muted = true;
+  
+  // Always create oscillators based on the video grid size (for consistent audio)
   let baseFreq = 220; // A3
-  for (let i = 0; i < gridSize * gridSize; i++) {
+  for (let i = 0; i < videoGridSize * videoGridSize; i++) {
     let osc = new p5.Oscillator();
     // Calculate a frequency using pentatonic scale intervals
     // This creates harmonious frequencies when multiple oscillators play together
@@ -36,7 +41,6 @@ function setup() {
   }
   
   // Set main volume to a lower value to prevent excessive loudness
-  // Using the correct p5.js sound library approach
   outputVolume(0.3);
 }
 
@@ -65,16 +69,18 @@ function videoLoaded() {
 }
 
 function draw() {
-  // Always process video pixels and count yellow pixels regardless of visibility
-  // Reset section counts
+  // Reset section counts for both grid sizes
   sectionCounts.fill(0);
+  hiddenSectionCounts.fill(0);
   yellowPixelCount = 0;
   
   // Count yellow pixels
   video.loadPixels(willReadFrequently = true);
   
-  const sectionWidth = video.width / gridSize;
-  const sectionHeight = video.height / gridSize;
+  const videoSectionWidth = video.width / videoGridSize;
+  const videoSectionHeight = video.height / videoGridSize;
+  const hiddenSectionWidth = video.width / hiddenGridSize;
+  const hiddenSectionHeight = video.height / hiddenGridSize;
 
   for (let y = 0; y < video.height; y++) {
     for (let x = 0; x < video.width; x++) {
@@ -87,13 +93,18 @@ function draw() {
       if (r > 125 && g > 125 && b < 100) {
         yellowPixelCount++;
         
-        // Determine which section this pixel belongs to
-        const sectionX = Math.floor(x / sectionWidth);
-        const sectionY = Math.floor(y / sectionHeight);
-        const sectionIndex = sectionY * gridSize + sectionX;
+        // Determine which section this pixel belongs to for both grid sizes
+        const videoSectionX = Math.floor(x / videoSectionWidth);
+        const videoSectionY = Math.floor(y / videoSectionHeight);
+        const videoSectionIndex = videoSectionY * videoGridSize + videoSectionX;
         
-        // Increment the count for this section
-        sectionCounts[sectionIndex]++;
+        const hiddenSectionX = Math.floor(x / hiddenSectionWidth);
+        const hiddenSectionY = Math.floor(y / hiddenSectionHeight);
+        const hiddenSectionIndex = hiddenSectionY * hiddenGridSize + hiddenSectionX;
+        
+        // Increment counts for both grid sizes
+        sectionCounts[videoSectionIndex]++;
+        hiddenSectionCounts[hiddenSectionIndex]++;
       }
     }
   }
@@ -108,24 +119,24 @@ function draw() {
     strokeWeight(1); // Thin lines
     
     // Draw vertical lines
-    for (let i = 1; i < gridSize; i++) {
-      const x = i * (width / gridSize);
+    for (let i = 1; i < videoGridSize; i++) {
+      const x = i * (width / videoGridSize);
       line(x, 0, x, height);
     }
     
     // Draw horizontal lines
-    for (let i = 1; i < gridSize; i++) {
-      const y = i * (height / gridSize);
+    for (let i = 1; i < videoGridSize; i++) {
+      const y = i * (height / videoGridSize);
       line(0, y, width, y);
     }
     
     // Display counters for each section
     textSize(16);
-    for (let y = 0; y < gridSize; y++) {
-      for (let x = 0; x < gridSize; x++) {
-        const sectionIndex = y * gridSize + x;
-        const sectionX = x * (width / gridSize);
-        const sectionY = y * (height / gridSize);
+    for (let y = 0; y < videoGridSize; y++) {
+      for (let x = 0; x < videoGridSize; x++) {
+        const sectionIndex = y * videoGridSize + x;
+        const sectionX = x * (width / videoGridSize);
+        const sectionY = y * (height / videoGridSize);
         
         // Semi-transparent background for the counter
         fill(0, 0, 0, 100);
@@ -141,54 +152,51 @@ function draw() {
     // Draw white background when video is hidden
     background(255);
     
-    // Create visualization based on yellow pixel counts
+    // Create visualization based on yellow pixel counts with higher resolution grid
     noStroke();
-    for (let y = 0; y < gridSize; y++) {
-      for (let x = 0; x < gridSize; x++) {
-        const sectionIndex = y * gridSize + x;
-        const sectionX = x * (width / gridSize);
-        const sectionY = y * (height / gridSize);
+    const currentSectionWidth = width / hiddenGridSize;
+    const currentSectionHeight = height / hiddenGridSize;
+    
+    for (let y = 0; y < hiddenGridSize; y++) {
+      for (let x = 0; x < hiddenGridSize; x++) {
+        const sectionIndex = y * hiddenGridSize + x;
+        const sectionX = x * currentSectionWidth;
+        const sectionY = y * currentSectionHeight;
         
         // Calculate size and color based on pixel count
-        const count = sectionCounts[sectionIndex];
-        const normalizedCount = map(count, 0, maxPixelCount, 0, 1);
-        const circleSize = map(normalizedCount, 0, 1, 5, sectionWidth * 1.5);
+        const count = hiddenSectionCounts[sectionIndex];
+        const maxHiddenPixelCount = maxPixelCount / ((hiddenGridSize * hiddenGridSize) / (videoGridSize * videoGridSize));
+        const normalizedCount = map(count, 0, maxHiddenPixelCount, 0, 1);
+        const circleSize = map(normalizedCount, 0, 1, 1, currentSectionWidth * 1.5);
         
         // Use yellow with opacity based on count
-        fill(220, 220, 0, map(normalizedCount, 0, 1, 50, 200));
+        fill(240, 220, 0, map(normalizedCount, 0, 1, 50, 255));
         
         // Draw circle in the center of each section
         ellipse(
-          sectionX + sectionWidth/2, 
-          sectionY + sectionHeight/2, 
+          sectionX + currentSectionWidth/2, 
+          sectionY + currentSectionHeight/2, 
           circleSize, 
           circleSize
         );
       }
     }
-    
-    // Optional: Draw subtle grid lines
-    // stroke(200);
-    // strokeWeight(0.5);
-    // for (let i = 1; i < gridSize; i++) {
-    //   const x = i * (width / gridSize);
-    //   line(x, 0, x, height);
-    // }
-    // for (let i = 1; i < gridSize; i++) {
-    //   const y = i * (height / gridSize);
-    //   line(0, y, width, y);
-    // }
   }
 
-  // Update oscillator volumes based on section counts
-  for (let i = 0; i < sectionCounts.length; i++) {
+  // Update oscillator volumes based on the 8x8 section counts
+  for (let i = 0; i < videoGridSize * videoGridSize; i++) {
     // Normalize the count to a value between 0 and 1 for volume control
     // with a cap to prevent excessive loudness
     let normalizedCount = map(sectionCounts[i], 0, maxPixelCount, 0, 0.8);
     normalizedCount = constrain(normalizedCount, 0, 0.8);
     
-    // Apply some smoothing to volume changes
-    oscillators[i].amp(normalizedCount, 0.1);
+    // Only play sound if audio is enabled
+    if (audioEnabled) {
+      // Apply some smoothing to volume changes
+      oscillators[i].amp(normalizedCount, 0.1);
+    } else {
+      oscillators[i].amp(0, 0.1);
+    }
   }
 
   // Always display the total counter at the bottom
