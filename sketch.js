@@ -1,10 +1,11 @@
 let video;
 let yellowPixelCount = 0;
-const gridSize = 5; // 4x4 grid 
+const gridSize = 8; // 4x4 grid 
 let sectionCounts = new Array(gridSize * gridSize).fill(0);
 let oscillators = []; // Array to store oscillators for each section
 let maxPixelCount = 6000; // Cap for normalizing volumes (adjust based on your video)
 let audioEnabled = false; // Track audio state
+let videoVisible = true; // Track video visibility state
 
 const margin = 5;
 
@@ -24,7 +25,7 @@ function setup() {
     // Calculate a frequency using pentatonic scale intervals
     // This creates harmonious frequencies when multiple oscillators play together
     let freqMultiplier = [1, 1.125, 1.25, 1.5, 1.6667][i % 5];
-    let octaveMultiplier = Math.floor(i / 5) * 0.5 + 1;
+    let octaveMultiplier = Math.floor(i / 16) * 0.5 + 1;
     let freq = baseFreq * freqMultiplier * octaveMultiplier;
     
     osc.setType('sine');
@@ -53,15 +54,18 @@ function toggleAudio() {
   }
 }
 
+// Toggle visibility state
+function toggleVisibility() {
+  videoVisible = !videoVisible;
+}
+
 function videoLoaded() {
   video.loop();
   video.volume(0);
 }
 
 function draw() {
-  // Draw the video to the canvas
-  image(video, 0, 0, width, height);
-  
+  // Always process video pixels and count yellow pixels regardless of visibility
   // Reset section counts
   sectionCounts.fill(0);
   yellowPixelCount = 0;
@@ -94,6 +98,88 @@ function draw() {
     }
   }
 
+  // Draw either the video or the white background with visualization
+  if (videoVisible) {
+    // Draw the video to the canvas
+    image(video, 0, 0, width, height);
+    
+    // Draw grid lines
+    stroke(255); // White lines
+    strokeWeight(1); // Thin lines
+    
+    // Draw vertical lines
+    for (let i = 1; i < gridSize; i++) {
+      const x = i * (width / gridSize);
+      line(x, 0, x, height);
+    }
+    
+    // Draw horizontal lines
+    for (let i = 1; i < gridSize; i++) {
+      const y = i * (height / gridSize);
+      line(0, y, width, y);
+    }
+    
+    // Display counters for each section
+    textSize(16);
+    for (let y = 0; y < gridSize; y++) {
+      for (let x = 0; x < gridSize; x++) {
+        const sectionIndex = y * gridSize + x;
+        const sectionX = x * (width / gridSize);
+        const sectionY = y * (height / gridSize);
+        
+        // Semi-transparent background for the counter
+        fill(0, 0, 0, 100);
+        noStroke();
+        rect(sectionX + 5, sectionY + 5, 70, 25, 5);
+        
+        // Text for the counter
+        fill(220, 220, 70); // Yellow text
+        text(sectionCounts[sectionIndex], sectionX + 10, sectionY + 23);
+      }
+    }
+  } else {
+    // Draw white background when video is hidden
+    background(255);
+    
+    // Create visualization based on yellow pixel counts
+    noStroke();
+    for (let y = 0; y < gridSize; y++) {
+      for (let x = 0; x < gridSize; x++) {
+        const sectionIndex = y * gridSize + x;
+        const sectionX = x * (width / gridSize);
+        const sectionY = y * (height / gridSize);
+        
+        // Calculate size and color based on pixel count
+        const count = sectionCounts[sectionIndex];
+        const normalizedCount = map(count, 0, maxPixelCount, 0, 1);
+        const circleSize = map(normalizedCount, 0, 1, 5, sectionWidth * 1.5);
+        
+        // Use yellow with opacity based on count
+        fill(220, 220, 0, map(normalizedCount, 0, 1, 50, 200));
+        
+        // Draw circle in the center of each section
+        ellipse(
+          sectionX + sectionWidth/2, 
+          sectionY + sectionHeight/2, 
+          circleSize, 
+          circleSize
+        );
+      }
+    }
+    
+    // Optional: Draw subtle grid lines
+    // stroke(200);
+    // strokeWeight(0.5);
+    // for (let i = 1; i < gridSize; i++) {
+    //   const x = i * (width / gridSize);
+    //   line(x, 0, x, height);
+    // }
+    // for (let i = 1; i < gridSize; i++) {
+    //   const y = i * (height / gridSize);
+    //   line(0, y, width, y);
+    // }
+  }
+
   // Update oscillator volumes based on section counts
   for (let i = 0; i < sectionCounts.length; i++) {
     // Normalize the count to a value between 0 and 1 for volume control
@@ -105,42 +191,7 @@ function draw() {
     oscillators[i].amp(normalizedCount, 0.1);
   }
 
-  // Draw grid lines
-  stroke(255); // White lines
-  strokeWeight(1); // Thin lines
-  
-  // Draw vertical lines
-  for (let i = 1; i < gridSize; i++) {
-    const x = i * (width / gridSize);
-    line(x, 0, x, height);
-  }
-  
-  // Draw horizontal lines
-  for (let i = 1; i < gridSize; i++) {
-    const y = i * (height / gridSize);
-    line(0, y, width, y);
-  }
-  
-  // Display counters for each section
-  textSize(16);
-  for (let y = 0; y < gridSize; y++) {
-    for (let x = 0; x < gridSize; x++) {
-      const sectionIndex = y * gridSize + x;
-      const sectionX = x * (width / gridSize);
-      const sectionY = y * (height / gridSize);
-      
-      // Semi-transparent background for the counter
-      fill(0, 0, 0, 100);
-      noStroke();
-      rect(sectionX + 5, sectionY + 5, 70, 25, 5);
-      
-      // Text for the counter
-      fill(220, 220, 70); // Yellow text
-      text(sectionCounts[sectionIndex], sectionX + 10, sectionY + 23);
-    }
-  }
-
-  // Display the total counter at the bottom
+  // Always display the total counter at the bottom
   fill(0, 0, 0, 100);
   noStroke();
   rect(5, 650 - 45, 240, 40, 5);
@@ -149,7 +200,9 @@ function draw() {
   textSize(24);
   text(`total yellow: ${yellowPixelCount}`, 10, 650 - 17);
 
-  drawAudioButton(); 
+  // Always draw the control buttons
+  drawAudioButton();
+  drawVisibilityButton();
 }
 
 function drawAudioButton() {
@@ -184,15 +237,74 @@ function drawAudioButton() {
   }
 }
 
+function drawVisibilityButton() {
+  const buttonSize = 40;
+  const buttonX = width - buttonSize - margin;
+  const buttonY = height - 2*buttonSize - 2*margin; // Position above audio button
+  
+  // Draw eye icon
+  stroke(220, 220, 70);
+  strokeWeight(2.5);
+  
+  // Create a more pointy eye outline
+  fill(220, 220, 70, 50);
+  beginShape();
+  // Define the eye shape with pointed sides
+  const eyeWidth = 24;
+  const eyeHeight = 20;
+  const centerX = buttonX + buttonSize/2;
+  const centerY = buttonY + buttonSize/2;
+  
+  // Top curve
+  vertex(centerX - eyeWidth/2, centerY); // Left point
+  bezierVertex(
+    centerX - eyeWidth/3, centerY - eyeHeight/2,
+    centerX + eyeWidth/3, centerY - eyeHeight/2,
+    centerX + eyeWidth/2, centerY  // Right point
+  );
+  
+  // Bottom curve
+  bezierVertex(
+    centerX + eyeWidth/3, centerY + eyeHeight/2,
+    centerX - eyeWidth/3, centerY + eyeHeight/2,
+    centerX - eyeWidth/2, centerY  // Back to left point
+  );
+  
+  endShape(CLOSE);
+  
+  if (videoVisible) {
+    // Pupil when visible
+    fill(220, 220, 70);
+    noStroke();
+    ellipse(centerX, centerY, 8, 8);
+  } else {
+    // Closed eye with line when hidden
+    noFill();
+    stroke(220, 220, 70);
+    strokeWeight(2.5);
+    line(centerX - eyeWidth/2 + 4, centerY, centerX + eyeWidth/2 - 4, centerY);
+  }
+}
+
 function mousePressed() {
   // Check if audio button was clicked
   const buttonSize = 40;
-  const buttonX = width - buttonSize - margin;
-  const buttonY = height - buttonSize - margin;
+  const audioButtonX = width - buttonSize - margin;
+  const audioButtonY = height - buttonSize - margin;
   
-  const d = dist(mouseX, mouseY, buttonX + buttonSize/2, buttonY + buttonSize/2);
-  if (d < buttonSize/2) {
+  const audioD = dist(mouseX, mouseY, audioButtonX + buttonSize/2, audioButtonY + buttonSize/2);
+  if (audioD < buttonSize/2) {
     toggleAudio();
+    return false; // Prevent default behavior
+  }
+  
+  // Check if visibility button was clicked
+  const visButtonX = width - buttonSize - margin;
+  const visButtonY = height - 2*buttonSize - 2*margin;
+  
+  const visD = dist(mouseX, mouseY, visButtonX + buttonSize/2, visButtonY + buttonSize/2);
+  if (visD < buttonSize/2) {
+    toggleVisibility();
     return false; // Prevent default behavior
   }
 }
