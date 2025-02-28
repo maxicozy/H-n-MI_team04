@@ -176,13 +176,12 @@ function draw() {
         const circleSize = map(normalizedCount, 0, 1, 1, currentSectionWidth * 1.5);
         
         // Use yellow with opacity based on count
-        fill(240, 220, 0, map(normalizedCount, 0, 1, 5, 200));
+        fill(240, 220, 0, map(normalizedCount, 0, 1, 100, 200));
         
         // Draw circle in the center of each section
         ellipse(
           sectionX + currentSectionWidth/2, 
           sectionY + currentSectionHeight/2, 
-          circleSize, 
           circleSize
         );
       }

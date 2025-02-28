@@ -1,6 +1,6 @@
 let video;
 let yellowPixelCount = 0;
-const videoGridSize = 16; // Grid size when video is visible
+const videoGridSize = 8; // Grid size when video is visible
 const hiddenGridSize = 128; // Grid size when video is hidden
 let gridSize = videoGridSize; // Current active grid size
 let sectionCounts = new Array(videoGridSize * videoGridSize).fill(0);
@@ -173,16 +173,15 @@ function draw() {
         const count = hiddenSectionCounts[sectionIndex];
         const maxHiddenPixelCount = maxPixelCount / ((hiddenGridSize * hiddenGridSize) / (videoGridSize * videoGridSize));
         const normalizedCount = map(count, 0, maxHiddenPixelCount, 0, 1);
-        const circleSize = map(normalizedCount, 0, 1, 1, currentSectionWidth * 1.5);
+        const circleSize = map(normalizedCount, 0, 1, 1, currentSectionWidth * 1);
         
         // Use yellow with opacity based on count
-        fill(240, 220, 0, map(normalizedCount, 0, 1, 5, 200));
+        fill(240, 220, 0, map(normalizedCount, 0, 1, 50, 200));
         
         // Draw circle in the center of each section
         ellipse(
           sectionX + currentSectionWidth/2, 
           sectionY + currentSectionHeight/2, 
-          circleSize, 
           circleSize
         );
       }
