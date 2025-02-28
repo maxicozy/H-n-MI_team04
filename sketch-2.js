@@ -1,6 +1,6 @@
 let video;
 let yellowPixelCount = 0;
-const videoGridSize = 16; // Grid size when video is visible
+const videoGridSize = 8; // Grid size when video is visible
 const hiddenGridSize = 128; // Grid size when video is hidden
 let gridSize = videoGridSize; // Current active grid size
 let sectionCounts = new Array(videoGridSize * videoGridSize).fill(0);
@@ -10,12 +10,12 @@ let maxPixelCount = 3000; // Cap for normalizing volumes (adjust based on your v
 let audioEnabled = false; // Track audio state
 let videoVisible = true; // Track video visibility state
 
-// let threshholds =
-//   { r: 75, g: 75, b: 100 }
-// ;
-let threshholds = { 
-  r: 125, g: 125, b: 100 
-};
+let threshholds =
+  { r: 75, g: 75, b: 100 }
+;
+// let threshholds = { 
+//   r: 125, g: 125, b: 100 
+// };
 
 const margin = 5;
 
@@ -24,7 +24,7 @@ function setup() {
   createCanvas(642, 650);
   
   // Create video element but don't add it to the DOM
-  video = createVideo('video-material/slime-growth_youtube.mp4', videoLoaded);
+  video = createVideo('video-material/slime-growth_youtube-1-2.mp4', videoLoaded);
   video.size(642, 650);
   video.hide(); // Hide the actual HTML video element
   video.elt.muted = true;
