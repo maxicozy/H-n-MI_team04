@@ -23,10 +23,6 @@ By defining a threshhold for determining yellow pixels, we counted the amount of
 
 ## Setup and Usage
 
-### Prerequisites
-
-- Node.js and npm installed on your machine
-
 ### Installation
 
 1. Go to the folder you want to clone the repository to.
@@ -45,7 +41,7 @@ By defining a threshhold for determining yellow pixels, we counted the amount of
 ### Usage
 
 To visualize a different slime mold growing timelapse, the path to video file needs to be changed (sketch.js, line 27).
-For a different video, different threshholds to detect yellow pixels might have to be used (sketch.js, line 1w7).
+For a different video, different threshholds to detect yellow pixels might have to be used (sketch.js, line 17).
 
 ## Exploration
 
