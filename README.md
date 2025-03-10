@@ -1,7 +1,55 @@
-# H-n-MI_team04
+# Slime Mold Visualization
+
 Group: Paula Rydel, Maximilian Becht
 
-In the course H(n)MI (short for Human (non-Human) Machine Interaction), we learned about how to collect data about the body with an Arduino and then how to process and visualize this data using processing or p5.js.
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Setup and Usage](#setup-and-usage)
+3. [Exploration](#exploration)
+4. [License](#license)
+5. [References](#references)
+
+## Introduction
+
+In the first part of the course H(n)MI (short for Human (non-Human) Machine Interaction), we explored how to collect data from a body with Arduino and Sensors, then how to process and visualize this data using Processing or p5.js.
+
+In the second part, we had two days to develop a project in this context. Paula and I decided, that since the courses' title put emphasis on the 'non-human', we wanted to record data not from our own bodies, but from another living being.
+Since Paula has been working with Slime Molds, they turned out to be a perfect candidate for our experiment. Instead of using an Arduino, we decided to process visual data from a slime mold in the form of a growth timelapse using p5js.
+
+By defining a threshhold for determining yellow pixels, we counted the amount of yellow pixels in different areas of the video, using that to control a pentatonic scale of notes alongside a visual representation.
+
+![slime-mold-visualization](images/slime-mold-p5-visualization.gif)
+
+## Setup and Usage
+
+### Prerequisites
+
+- Node.js and npm installed on your machine
+
+### Installation
+
+1. Go to the folder you want to clone the repository to.
+
+2. Clone the repository:
+    ```sh
+    git clone https://github.com/yourusername/H-n-MI_team04.git
+    cd H-n-MI_team04
+    ```
+
+### Running the Project
+
+1. Open the index.html on a live server.
+2. Toggle sound / visualization using the control panel on the bottom right.
+
+### Usage
+
+To visualize a different slime mold growing timelapse, the path to video file needs to be changed (sketch.js, line 27).
+For a different video, different threshholds to detect yellow pixels might have to be used (sketch.js, line 1w7).
+
+## Exploration
+
+In the course H(n)MI (short for Human (non-Human) Machine Interaction), we learned about how to collect data from a body with an Arduino and then how to process and visualize this data using processing or p5.js.
 
 ## first day
 
@@ -218,13 +266,11 @@ Since we are currently not planning to actually use the pressure sensor for our 
 
 2. The other way would be to count the amount of yellow pixels in certain specified areas of the camera resolution, which would give us very concrete data we could use for visualization. 
 
+## License
 
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-
- 
-
-
-## references
+## References
 
 Many code snippets and detailed instructions can be found in our teachers' repository:
 [https://github.com/TURBULENTE/H-n-MI](https://github.com/TURBULENTE/H-n-MI)
