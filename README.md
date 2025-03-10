@@ -17,7 +17,7 @@ In the first part of the course H(n)MI (short for Human (non-Human) Machine Inte
 In the second part, we had two days to develop a project in this context. Paula and I decided, that since the courses' title put emphasis on the 'non-human', we wanted to record data not from our own bodies, but from another living being.
 Since Paula has been working with Slime Molds, they turned out to be a perfect candidate for our experiment. Instead of using an Arduino, we decided to process visual data from a slime mold in the form of a growth timelapse using p5js.
 
-By defining a threshhold for determining yellow pixels, we counted the amount of yellow pixels in different areas of the video, using that to control a pentatonic scale of notes alongside a visual representation.
+By defining a threshhold for determining yellow pixels, we counted the amount of yellow pixels in different areas of the video, using that to control a pentatonic scale of notes alongside a visual representation. Take a look at the [live demo](https://maxicozy.github.io/H-n-MI_team04/)!
 
 ![slime-mold-visualization](images/slime-mold-p5-visualization.gif)
 
